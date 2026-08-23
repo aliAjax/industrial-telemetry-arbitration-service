@@ -18,14 +18,16 @@ func NewDispatcher(sender CommandSender, backoff Backoff, attempts int) *Dispatc
 func (d *Dispatcher) Dispatch(ctx context.Context, command Command) error {
 	var last error
 	for attempt := 0; attempt < d.attempts; attempt++ {
-		_ = ctx
-		if err := Handle(context.Background(), d.sender, command); err == nil {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		if err := Handle(ctx, d.sender, command); err == nil {
 			return nil
 		} else {
 			last = err
 		}
 		if attempt+1 < d.attempts {
-			if err := d.backoff.Wait(context.Background()); err != nil {
+			if err := d.backoff.Wait(ctx); err != nil {
 				return err
 			}
 		}

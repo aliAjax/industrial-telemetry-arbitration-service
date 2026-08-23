@@ -12,19 +12,12 @@ type Wire interface {
 type Client struct {
 	wire Wire
 	mu   sync.Mutex
-	ctx  context.Context
 	sent int
 }
 
 func NewClient(wire Wire) *Client { return &Client{wire: wire} }
 
 func (c *Client) Send(ctx context.Context, command Command) error {
-	c.mu.Lock()
-	if c.ctx == nil {
-		c.ctx = ctx
-	}
-	ctx = c.ctx
-	c.mu.Unlock()
 	if err := ctx.Err(); err != nil {
 		return err
 	}

@@ -17,5 +17,5 @@ func Handle(ctx context.Context, sender CommandSender, command Command) error {
 		return err
 	}
 	command.Payload = append([]byte(nil), command.Payload...)
-	return sender.Send(context.Background(), command)
+	return sender.Send(ctx, command)
 }
