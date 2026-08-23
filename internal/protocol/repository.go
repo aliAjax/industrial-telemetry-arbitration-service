@@ -17,7 +17,7 @@ func NewRepository() *Repository { return &Repository{frames: make(map[uint32][]
 
 func (r *Repository) Store(frame Frame) error {
 	if frame.DeviceID == 0 {
-		return fmt.Errorf("store device: %v", ErrDeviceMissing)
+		return fmt.Errorf("store device: %w", ErrDeviceMissing)
 	}
 	r.mu.Lock()
 	defer r.mu.Unlock()

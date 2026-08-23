@@ -4,6 +4,7 @@ type Response struct {
 	Status int
 	Retry  bool
 	Class  FailureClass
+	Err    error
 }
 
 type Handler struct{ repository *Repository }
@@ -19,5 +20,12 @@ func (h *Handler) Ingest(data []byte) Response {
 		return Response{Status: 202}
 	}
 	class := Classify(err)
-	return Response{Status: 503, Retry: true, Class: class}
+	switch class {
+	case FailurePermanent:
+		return Response{Status: 422, Retry: false, Class: class, Err: err}
+	case FailureMissing:
+		return Response{Status: 404, Retry: false, Class: class, Err: err}
+	default:
+		return Response{Status: 503, Retry: true, Class: class, Err: err}
+	}
 }

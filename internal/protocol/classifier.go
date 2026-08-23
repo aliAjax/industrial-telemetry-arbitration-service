@@ -1,5 +1,7 @@
 package protocol
 
+import "errors"
+
 type FailureClass string
 
 const (
@@ -10,9 +12,9 @@ const (
 
 func Classify(err error) FailureClass {
 	switch {
-	case err == ErrChecksum, err == ErrVersion, err == ErrMalformed:
+	case errors.Is(err, ErrChecksum), errors.Is(err, ErrVersion), errors.Is(err, ErrMalformed):
 		return FailurePermanent
-	case err == ErrDeviceMissing:
+	case errors.Is(err, ErrDeviceMissing):
 		return FailureMissing
 	default:
 		return FailureTransient
