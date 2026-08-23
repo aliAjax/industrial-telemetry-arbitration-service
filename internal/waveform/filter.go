@@ -7,8 +7,7 @@ type Sample struct {
 }
 
 func FilterStable(samples []Sample, minimumQuality int) []Sample {
-	capacity := cap(samples)
-	out := samples[:0:capacity]
+	out := make([]Sample, 0, len(samples))
 	for _, sample := range samples {
 		if sample.Quality >= minimumQuality {
 			out = append(out, sample)

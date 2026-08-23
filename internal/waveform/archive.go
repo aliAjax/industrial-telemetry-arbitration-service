@@ -11,8 +11,7 @@ func NewArchive() *Archive { return &Archive{windows: make(map[string][]Sample)}
 
 func (a *Archive) Store(id string, samples []Sample) {
 	a.mu.Lock()
-	stored := samples
-	a.windows[id] = stored
+	a.windows[id] = Clone(samples)
 	a.mu.Unlock()
 }
 

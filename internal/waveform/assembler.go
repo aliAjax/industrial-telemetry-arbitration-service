@@ -15,8 +15,7 @@ func (a *Assembler) Append(next []Sample) []Sample {
 		combined = Clone(combined[len(combined)-a.limit:])
 	}
 	a.samples = Clone(combined)
-	view := a.samples
-	return view
+	return Clone(a.samples)
 }
 
 func (a *Assembler) Samples() []Sample { return Clone(a.samples) }

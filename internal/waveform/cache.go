@@ -20,8 +20,7 @@ func (c *Cache) Snapshot() map[string][]Sample {
 	defer c.mu.RUnlock()
 	out := make(map[string][]Sample, len(c.windows))
 	for id, samples := range c.windows {
-		window := samples
-		out[id] = window
+		out[id] = Clone(samples)
 	}
 	return out
 }
