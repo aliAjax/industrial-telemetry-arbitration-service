@@ -16,7 +16,7 @@ func (w *Worker) Process(ctx context.Context, requests []Request) error {
 		}
 		current := request
 		if err := w.retry.Do(ctx, func(callCtx context.Context) error {
-			return Handle(context.Background(), w.sender, current)
+			return Handle(callCtx, w.sender, current)
 		}); err != nil {
 			return err
 		}

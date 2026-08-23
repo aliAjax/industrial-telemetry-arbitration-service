@@ -12,19 +12,12 @@ type Transport interface {
 type Session struct {
 	mu        sync.Mutex
 	transport Transport
-	ctx       context.Context
 	sent      int
 }
 
 func NewSession(transport Transport) *Session { return &Session{transport: transport} }
 
 func (s *Session) Send(ctx context.Context, payload []byte) error {
-	s.mu.Lock()
-	if s.ctx == nil {
-		s.ctx = ctx
-	}
-	ctx = s.ctx
-	s.mu.Unlock()
 	if err := ctx.Err(); err != nil {
 		return err
 	}
