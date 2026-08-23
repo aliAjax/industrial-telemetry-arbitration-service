@@ -16,9 +16,22 @@ func (r Repository) WithTx(operation func(Tx) error) (err error) {
 	if err != nil {
 		return fmt.Errorf("begin rollout: %w", err)
 	}
-	defer func() { err = tx.Commit() }()
+	committed := false
+	defer func() {
+		if committed {
+			return
+		}
+		if rbErr := tx.Rollback(); rbErr != nil && err == nil {
+			err = fmt.Errorf("rollback rollout: %w", rbErr)
+		}
+	}()
 	if err = operation(tx); err != nil {
 		return err
 	}
+	if cerr := tx.Commit(); cerr != nil {
+		err = fmt.Errorf("commit rollout: %w", cerr)
+		return err
+	}
+	committed = true
 	return nil
 }

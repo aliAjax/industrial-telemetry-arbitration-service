@@ -11,12 +11,7 @@ type Batch struct{ Open func(string) (Handle, error) }
 
 func (b Batch) Apply(stations []string) error {
 	for _, station := range stations {
-		handle, err := b.Open(station)
-		if err != nil {
-			return err
-		}
-		defer handle.Close()
-		if err := handle.Apply(); err != nil {
+		if err := b.applyOne(station); err != nil {
 			return err
 		}
 	}
