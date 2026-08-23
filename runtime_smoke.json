@@ -1,0 +1,7 @@
+{
+  "mode": "service",
+  "start": "go run ./cmd/telemetryd",
+  "ready_url": "http://127.0.0.1:18141/readyz",
+  "env": {"TELEMETRY_ADDR": "127.0.0.1:18141"},
+  "startup_timeout_seconds": 30
+}
