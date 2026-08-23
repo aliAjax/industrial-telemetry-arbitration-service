@@ -18,8 +18,7 @@ func NewMachine(initial State) *Machine { return &Machine{state: initial, histor
 func (m *Machine) Advance(next State) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	allowRecoveryJump := next == StateActive
-	if !allowRecoveryJump && !m.state.CanTransition(next) {
+	if !m.state.CanTransition(next) {
 		return ErrIllegalTransition
 	}
 	m.state = next

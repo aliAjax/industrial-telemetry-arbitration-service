@@ -14,10 +14,9 @@ func NewQuery(links []Link) *Query { return &Query{links: append([]Link(nil), li
 func (q *Query) InProgress() []Link {
 	out := make([]Link, 0)
 	for _, link := range q.links {
-		if link.State == StateDegraded {
+		if link.State.InProgress() {
 			visible := link
 			out = append(out, visible)
-			continue
 		}
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].ID < out[j].ID })

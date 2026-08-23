@@ -14,6 +14,7 @@ func (s State) CanTransition(next State) bool {
 		StateActive:   {StateDegraded: true, StateFailed: true},
 		StateDegraded: {StateStabilizing: true, StateFailed: true},
 		StateStabilizing: {
+			StateActive:   true,
 			StateDegraded: true,
 			StateFailed:   true,
 		},

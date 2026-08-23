@@ -22,5 +22,5 @@ func (w *Worker) Recover(ctx context.Context, link string, machine *Machine) err
 	if !stable {
 		return machine.Advance(StateDegraded)
 	}
-	return nil
+	return machine.Advance(StateActive)
 }
