@@ -11,10 +11,10 @@ func Fanout(ctx context.Context, inputs []Ack, processor Processor) (<-chan Ack,
 	results := make(chan Ack, len(inputs))
 	errorsOut := make(chan error, len(inputs))
 	var wg sync.WaitGroup
+	wg.Add(len(inputs))
 	for _, input := range inputs {
 		input := input.Clone()
 		go func() {
-			wg.Add(1)
 			defer wg.Done()
 			result, err := processor(ctx, input)
 			if err != nil {
@@ -29,6 +29,7 @@ func Fanout(ctx context.Context, inputs []Ack, processor Processor) (<-chan Ack,
 		}()
 	}
 	go func() {
+		wg.Wait()
 		close(results)
 		close(errorsOut)
 	}()

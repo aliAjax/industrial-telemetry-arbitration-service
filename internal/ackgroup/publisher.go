@@ -15,6 +15,8 @@ func NewPublisher(capacity int) *Publisher {
 func (p *Publisher) Events() <-chan Ack { return p.events }
 
 func (p *Publisher) Publish(ack Ack) bool {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	if p.closed {
 		return false
 	}
@@ -27,6 +29,8 @@ func (p *Publisher) Publish(ack Ack) bool {
 }
 
 func (p *Publisher) Close() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	if p.closed {
 		return
 	}
