@@ -7,5 +7,12 @@ type Candidate struct {
 }
 
 func (c Candidate) Clone() Candidate {
-	return c
+	cp := c
+	if c.Labels != nil {
+		cp.Labels = make(map[string]string, len(c.Labels))
+		for k, v := range c.Labels {
+			cp.Labels[k] = v
+		}
+	}
+	return cp
 }

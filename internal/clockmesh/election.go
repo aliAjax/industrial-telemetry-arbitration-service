@@ -30,6 +30,8 @@ func (e *Election) Vote(candidate Candidate) error {
 }
 
 func (e *Election) Close() {
+	e.mu.Lock()
+	defer e.mu.Unlock()
 	if e.closed {
 		return
 	}

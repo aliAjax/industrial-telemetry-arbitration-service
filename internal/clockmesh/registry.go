@@ -13,14 +13,14 @@ func NewRegistry() *Registry {
 
 func (r *Registry) Record(key string, candidates []Candidate) {
 	r.mu.Lock()
-	r.history[key] = candidates
+	r.history[key] = cloneCandidates(candidates)
 	r.mu.Unlock()
 }
 
 func (r *Registry) Snapshot(key string) []Candidate {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	return r.history[key]
+	return cloneCandidates(r.history[key])
 }
 
 func cloneCandidates(candidates []Candidate) []Candidate {
