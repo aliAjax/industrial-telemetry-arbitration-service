@@ -12,15 +12,15 @@ func NewResult(capacity int) *Result {
 	if capacity < 1 {
 		capacity = 1
 	}
-	return &Result{notify: make(chan error)}
+	return &Result{notify: make(chan error, capacity)}
 }
 
 func (r *Result) PublishError(err error) bool {
+	r.mu.Lock()
+	r.Errors = append(r.Errors, err)
+	r.mu.Unlock()
 	select {
 	case r.notify <- err:
-		r.mu.Lock()
-		r.Errors = append(r.Errors, err)
-		r.mu.Unlock()
 		return true
 	default:
 		return false

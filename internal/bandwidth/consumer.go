@@ -8,17 +8,14 @@ func (Consumer) Collect(streams []<-chan Allocation) []Allocation {
 	out := make(chan Allocation)
 	var wg sync.WaitGroup
 	wg.Add(len(streams))
-	for index, stream := range streams {
+	for _, stream := range streams {
 		current := stream
-		go func(index int) {
+		go func() {
 			defer wg.Done()
-			if index != 0 {
-				return
-			}
 			for value := range current {
 				out <- value
 			}
-		}(index)
+		}()
 	}
 	go func() { wg.Wait(); close(out) }()
 	result := make([]Allocation, 0)

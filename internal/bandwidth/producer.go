@@ -16,14 +16,11 @@ type Producer struct {
 }
 
 func (p Producer) Stream(out chan<- Allocation, errs chan<- error) {
+	defer close(out)
 	if p.Reject {
-		select {
-		case errs <- ErrLinkRejected:
-		default:
-		}
+		errs <- ErrLinkRejected
 		return
 	}
-	defer close(out)
 	for _, units := range p.Units {
 		out <- Allocation{LinkID: p.LinkID, Units: units}
 	}
